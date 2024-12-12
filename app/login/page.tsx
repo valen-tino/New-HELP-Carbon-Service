@@ -1,80 +1,125 @@
 'use client'
 
-import Link from "next/link"
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import Link from "next/link";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { 
+    Alert,
+    AlertDescription,
+    AlertTitle
+} from '@/components/ui/alert';
 
 export default function LoginPage(){
-    const [user, setUser] = React.useState({
-        username: '',
-        password: ''
-    });
-    const [buttonDisabled, setButtonDisabled] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
-    const initLogin = async () => {
+    const form = useForm({
+        defaultValues: {
+            username: '',
+            password: ''
+        },
+    });
+
+    async function onSubmit(values: any){
+        setIsLoading(true);
+        setError('');
+        setSuccess('');
+    
         try {
-            setLoading(true);
-            const res = await axios.post('/api/auth/login', user);
-            console.log('Successfully logged in' + res.data);
-        } catch(err: any){
-            console.log('Failed to sign in. ', err.message);
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values),
+            })
+    
+            const result = await res.json();
+            if(!res.ok){
+                throw new Error(result.error || 'Something went wrong.');
+            }
+            setSuccess('Successfully logged in to the system.');
+            form.reset();
+        } catch(error: any){
+            setError(error.message);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     }
 
-    useEffect(() => {
-        if( user.username.length > 0 &&
-            user.password.length > 0
-        ){
-            setButtonDisabled(false);
-        } else {
-            setButtonDisabled(true);
-        }
-    }, [user]);
-    console.log(user);
-
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign In to your account</h2>
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+                Login
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+                Login with your account
+            </p>
         </div>
-        <h1 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            {loading ? 'Processing' : 'Free Login'}
-        </h1>
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Username" {...field}/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} 
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            placeholder="Password"
+                                            type="password"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} 
+                        />
+                        <Button type="submit" className="w-full" disabled={isLoading}>
+                            {isLoading ? 'Logging in..' : 'Login'}
+                        </Button>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <div className="space-y-6">
-                <div>
-                    <label htmlFor="username" className="block text-sm/6 font-medium text-gray-900">Username</label>
-                    <input
-                        id="username"
-                        type="text"
-                        value={user.username}
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        onChange={(e) => setUser({ ...user, username: e.target.value })}
-                        placeholder="Your Username"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={user.password}
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        onChange={(e) => setUser({ ...user, password: e.target.value })}
-                        placeholder="Your Password" 
-                    />
-                </div>
-                <div>
-                    <button
-                        onClick={initLogin}
-                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        {buttonDisabled ? 'Login' : 'Login'}
-                    </button>
-                </div>
+                        {error && (
+                            <Alert variant="destructive">
+                                <AlertTitle>Error</AlertTitle>
+                                <AlertDescription>{error}</AlertDescription>
+                            </Alert>
+                        )}
+                    </form>
+                </Form>
+                <p className="mt-4 text-center text-sm text-gray-600">Don&apos;t have an account? {''}
+                    <Link href="/register" className="font-medium text-green-400 hover:text-green-800">
+                        Register
+                    </Link>
+                </p>
             </div>
         </div>
     </div>
