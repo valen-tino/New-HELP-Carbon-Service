@@ -30,7 +30,7 @@ const profileSchema = z.object({
   dietaryPreferences: z.array(z.string()),
 });
 
-export function ProfileForm() {
+export function ProfileForm(){
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
