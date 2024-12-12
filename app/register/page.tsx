@@ -2,106 +2,164 @@
 
 import Link from "next/link";
 import React, { useEffect } from "react";
-import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { 
+    Alert,
+    AlertDescription,
+    AlertTitle
+} from '@/components/ui/alert';
 
 export default function RegisterPage(){
-    const [user, setUser] = React.useState({
-        name: '',
-        email: '',
-        username: '',
-        password: ''
-    });
-    const [buttonDisabled, setButtonDisabled] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const router = useRouter();
 
-    const initSignUp = async () => {
+    const form = useForm({
+        defaultValues: {
+            name: '',
+            email: '',
+            username: '',
+            password: ''
+        },
+    });
+    
+    async function onSubmit(values: any){
+        setIsLoading(true);
+        setError('');
+        setSuccess('');
+    
         try {
-            setLoading(true);
-            const res = await axios.post('/api/auth/signup', user);
-            console.log(res.data);
-        } catch(err: any){
-            console.log('Failed to sign up. ', err.message);
+            const res = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values),
+            })
+    
+            const result = await res.json();
+            if(!res.ok){
+                throw new Error(result.error || 'Something went wrong.');
+            }
+            setSuccess('Successfully registred the account.');
+            form.reset();
+            router.push('/login');
+        } catch(error: any){
+            setError(error.message);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     }
 
-    useEffect(() => {
-        if(
-            user.name.length > 0 &&
-            user.email.length > 0 &&
-            user.username.length > 0 &&
-            user.password.length > 0
-        ){
-            setButtonDisabled(false);
-        } else {
-            setButtonDisabled(true);
-        }
-    }, [user]);
-    console.log(user);
-
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign Up to your account</h2>
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+                Register
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+                Sign up to create your account
+            </p>
         </div>
-        <h1 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            {loading ? 'Processing' : 'Free Sign Up'}
-        </h1>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <div className="space-y-6">
-                <div>
-                    <label htmlFor="name" className="block text-sm/6 font-medium text-gray-900">Name</label>
-                    <input 
-                        id="name"
-                        type="text"
-                        value={user.name}
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        onChange={(e) => setUser({ ...user, name: e.target.value })}
-                        placeholder="Your Name"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">Email</label>
-                    <input
-                        id="email"
-                        type="text"
-                        value={user.email}
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        onChange={(e) => setUser({ ...user, email: e.target.value })}
-                        placeholder="Your Email" 
-                    />
-                </div>
-                <div>
-                    <label htmlFor="username" className="block text-sm/6 font-medium text-gray-900">Username</label>
-                    <input
-                        id="username"
-                        type="text"
-                        value={user.username}
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        onChange={(e) => setUser({ ...user, username: e.target.value })}
-                        placeholder="Your Username"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={user.password}
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        onChange={(e) => setUser({ ...user, password: e.target.value })}
-                        placeholder="Your Password" 
-                    />
-                </div>
-                <div>
-                    <button
-                        onClick={initSignUp}
-                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        {buttonDisabled ? 'Sign Up' : 'Register My Account Now'}
-                    </button>
-                </div>
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Insert your name here" {...field}/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} 
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Insert your email here" {...field}/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} 
+                        />
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>New Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Insert your username here" {...field}/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} 
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>New Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password" 
+                                            placeholder="Insert your password here" 
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} 
+                        />
+                        <Button type="submit" className="w-full" disabled={isLoading}>
+                            {isLoading ? 'Registering...' : 'Sign Up'}
+                        </Button>
+                        
+                        {error && (
+                            <Alert variant="destructive">
+                                <AlertTitle>Error</AlertTitle>
+                                <AlertDescription>{error}</AlertDescription>
+                            </Alert>
+                        )}
+
+                        {success && (
+                            <Alert>
+                                <AlertTitle>Success</AlertTitle>
+                                <AlertDescription>{success}</AlertDescription>
+                            </Alert>
+                        )}
+                    </form>
+                </Form>
+
+                <p className="mt-4 text-center text-sm text-gray-600">Already have an account? {''}
+                    <Link href="/login" className="font-medium text-green-400 hover:text-green-800">
+                        Login
+                    </Link>
+                </p>
             </div>
         </div>
     </div>
