@@ -18,7 +18,7 @@ export default function LoginPage(){
             const res = await axios.post('/api/auth/login', user);
             console.log('Successfully logged in' + res.data);
         } catch(err: any){
-            console.log('Failed to sign up. ', err.message);
+            console.log('Failed to sign in. ', err.message);
         } finally {
             setLoading(false);
         }
