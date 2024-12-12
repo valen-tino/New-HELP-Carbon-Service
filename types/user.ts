@@ -16,6 +16,8 @@ export interface User {
   _id: string;
   name: string;
   email: string;
+  username: string;
+  password: string;
   preferences: {
     reminderFrequency: 'daily' | 'weekly' | 'monthly';
     transportationPreferences: string[];
