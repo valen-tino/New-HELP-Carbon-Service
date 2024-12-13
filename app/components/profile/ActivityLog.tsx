@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 //
-const profileSchema = z.object({
+const activitySchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   reminderFrequency: z.enum(['daily', 'weekly', 'monthly']),
@@ -34,7 +34,7 @@ export function ActivityLog(){
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(activitySchema),
     defaultValues: {
       transportationMode: '',
       energyUsage: 0,
@@ -42,7 +42,7 @@ export function ActivityLog(){
     },
   });
 
-  async function onSubmit(values: z.infer<typeof profileSchema>) {
+  async function onSubmit(values: z.infer<typeof activitySchema>) {
     setIsLoading(true);
     try {
       const response = await fetch('/api/user', {
@@ -54,10 +54,10 @@ export function ActivityLog(){
       });
       
       if (!response.ok) {
-        throw new Error('Failed to save profile');
+        throw new Error('Failed to save activity');
       }
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('Error saving activity:', error);
     } finally {
       setIsLoading(false);
     }
