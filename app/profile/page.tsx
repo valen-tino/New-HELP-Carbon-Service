@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/ui/card';
 import { ProfileForm } from '@/app/components/profile/ProfileForm';
+import { ActivityLog } from '../components/profile/ActivityLog';
 
 export default function ProfilePage() {
   return (
@@ -10,7 +11,15 @@ export default function ProfilePage() {
 
       <Card className="p-6">
         <ProfileForm />
+        
       </Card>
+
+      <h1 className="text-3xl font-bold mb-6 mt-6">Activity Log</h1>
+      <Card className="p-6">
+        
+        <ActivityLog />
+      </Card>
+      
     </div>
   );
 }
