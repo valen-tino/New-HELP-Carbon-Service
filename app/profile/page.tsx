@@ -15,11 +15,7 @@ export default function ProfilePage() {
         
       </Card>
 
-      <h1 className="text-3xl font-bold mb-6 mt-6">Activity Log</h1>
-      <Card className="p-6">
-        
-        <ActivityLog />
-      </Card>
+      
       
     </div>
   );
