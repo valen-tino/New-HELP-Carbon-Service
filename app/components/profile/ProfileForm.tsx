@@ -26,11 +26,11 @@ const profileSchema = z.object({
   contactNumber: z.string().refine(val => !isNaN(val), { message: 'Contact number must be a number!' }),
   email: z.string().email('Invalid email address'),
   reminderFrequency: z.enum(['daily', 'weekly', 'monthly']),
-  transportationPreferences: z.array(z.string()),
-  dietaryPreferences: z.array(z.string()),
+  //transportationPreferences: z.array(z.string()),
+  //dietaryPreferences: z.array(z.string()),
 });
 
-export function ProfileForm(){
+export function ProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
@@ -39,6 +39,7 @@ export function ProfileForm(){
       username: '',
       email: '',
       contactNumber: '',
+      password: '12345678', 
       reminderFrequency: 'weekly',
       transportationPreferences: [],
       dietaryPreferences: [],
@@ -46,6 +47,9 @@ export function ProfileForm(){
   });
 
   async function onSubmit(values: z.infer<typeof profileSchema>) {
+    const confirmSubmit = window.confirm('Are you sure you want to continue?');
+    if (!confirmSubmit) return; 
+
     setIsLoading(true);
     try {
       const response = await fetch('/api/user', {
@@ -97,7 +101,7 @@ export function ProfileForm(){
           )}
         />
 
-      <FormField
+        <FormField
           control={form.control}
           name="contactNumber"
           render={({ field }) => (
@@ -125,8 +129,7 @@ export function ProfileForm(){
           )}
         />
 
-
-      <FormField
+        <FormField
           control={form.control}
           name="dietaryPreferences"
           render={({ field }) => (
