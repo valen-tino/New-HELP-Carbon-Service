@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
+import { useRouter } from "next/navigation";
 import {
     Form,
     FormControl,
@@ -24,6 +25,7 @@ export default function LoginPage(){
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const router = useRouter();
 
     const form = useForm({
         defaultValues: {
@@ -52,6 +54,7 @@ export default function LoginPage(){
             }
             setSuccess('Successfully logged in to the system.');
             form.reset();
+            router.push('/dashboard');
         } catch(error: any){
             setError(error.message);
         } finally {
@@ -91,7 +94,7 @@ export default function LoginPage(){
                             name="password"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input 
                                             placeholder="Password"
@@ -116,7 +119,7 @@ export default function LoginPage(){
                     </form>
                 </Form>
                 <p className="mt-4 text-center text-sm text-gray-600">Don&apos;t have an account? {''}
-                    <Link href="/register" className="font-medium text-green-400 hover:text-green-800">
+                    <Link href="/profile" className="font-medium text-green-400 hover:text-green-800">
                         Register
                     </Link>
                 </p>

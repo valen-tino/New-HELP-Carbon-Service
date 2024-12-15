@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,26 +24,31 @@ import {
 } from '@/components/ui/select';
 
 const profileSchema = z.object({
-  contactNumber: z.string().refine(val => !isNaN(val), { message: 'Contact number must be a number!' }),
+  username: z.string().min(6, "Username must be at least 6 characters."),
   email: z.string().email('Invalid email address'),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  contactNumber: z.string().refine((e) => !isNaN(Number(e)), {
+    message: 'Contact number must be in number format!'
+  }),
   reminderFrequency: z.enum(['daily', 'weekly', 'monthly']),
-  //transportationPreferences: z.array(z.string()),
-  //dietaryPreferences: z.array(z.string()),
+  transportationPreferences: z.string().min(1, "At least one transportation preference is required."),
+  dietaryPreferences: z.string().min(1, "At least one dietary preference is required.")
 });
 
 export function ProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       username: '',
       email: '',
+      name: '',
       contactNumber: '',
-      password: '12345678', 
-      reminderFrequency: 'weekly',
-      transportationPreferences: [],
-      dietaryPreferences: [],
+      reminderFrequency: 'weekly' as 'daily' | 'weekly' | 'monthly',
+      transportationPreferences: '',
+      dietaryPreferences: '',
     },
   });
 
@@ -52,19 +58,31 @@ export function ProfileForm() {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/user', {
+      const transformedValues = {
+        ...values,
+        transportationPreferences: values.transportationPreferences.split(",").map((item) => item.trim()),
+        dietaryPreferences: values.dietaryPreferences.split(",").map((item) => item.trim()),
+      };
+
+      const response = await fetch("api/profile/register", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(transformedValues),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to save profile');
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Failed to save profile");
       }
-    } catch (error) {
-      console.error('Error saving profile:', error);
+      
+      const res = await response.json();
+      console.log(`${res.email}`);
+      console.log(`${res.generatedPassword}`);
+      router.push("/login");
+    } catch(error){
+      console.error("Error saving profile: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -101,6 +119,20 @@ export function ProfileForm() {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name</FormLabel>
+              <FormControl>
+                <Input type="name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+  
         <FormField
           control={form.control}
           name="contactNumber"
