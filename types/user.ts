@@ -18,6 +18,8 @@ export interface User {
   email: string;
   username: string;
   password: string;
+  contactNumber: string;
+  commutingMethods: string;
   preferences: {
     reminderFrequency: 'daily' | 'weekly' | 'monthly';
     transportationPreferences: string[];

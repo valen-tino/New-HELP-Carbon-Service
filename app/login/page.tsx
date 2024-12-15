@@ -19,11 +19,13 @@ import {
     AlertDescription,
     AlertTitle
 } from '@/components/ui/alert';
+import { useRouter } from "next/navigation";
 
 export default function LoginPage(){
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const router = useRouter();
 
     const form = useForm({
         defaultValues: {
@@ -52,6 +54,7 @@ export default function LoginPage(){
             }
             setSuccess('Successfully logged in to the system.');
             form.reset();
+            router.push('/dashboard');
         } catch(error: any){
             setError(error.message);
         } finally {
@@ -91,7 +94,7 @@ export default function LoginPage(){
                             name="password"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input 
                                             placeholder="Password"
