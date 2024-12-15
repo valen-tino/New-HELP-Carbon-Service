@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/select';
 
 const profileSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  contactNumber: z.string().refine(val => !isNaN(val), { message: 'Contact number must be a number!' }),
   email: z.string().email('Invalid email address'),
   reminderFrequency: z.enum(['daily', 'weekly', 'monthly']),
   transportationPreferences: z.array(z.string()),
@@ -36,8 +36,9 @@ export function ProfileForm(){
   const form = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: '',
+      username: '',
       email: '',
+      contactNumber: '',
       reminderFrequency: 'weekly',
       transportationPreferences: [],
       dietaryPreferences: [],
@@ -70,10 +71,10 @@ export function ProfileForm(){
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="name"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -90,6 +91,20 @@ export function ProfileForm(){
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input type="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+      <FormField
+          control={form.control}
+          name="contactNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contact Number</FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
