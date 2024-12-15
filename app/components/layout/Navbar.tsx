@@ -88,9 +88,16 @@ export function Navbar() {
             {/* Add search or other controls here if needed */}
           </div>
           <nav className="flex items-center">
+          <Link href="/login">
             <Button variant="ghost" size="sm">
               Sign in
             </Button>
+            </Link>
+            <Link href="/register">
+            <Button variant="ghost" size="sm">
+              Register
+            </Button>
+            </Link>
           </nav>
         </div>
 
