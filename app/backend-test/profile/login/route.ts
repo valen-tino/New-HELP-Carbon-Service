@@ -21,24 +21,28 @@ export async function POST(req: NextRequest){
         if(!isPasswordValid){
             return NextResponse.json({ error: 'Password is not valid.'}, { status: 400 });
         }
-        const tokenData = {
-            id: user._id,
-            email: user.email,
-        };
-        const token = await jwt.sign(tokenData, process.env.SECRET_JWT!, {
-            expiresIn: '3d'
-        });
-
+        
+        const token = jwt.sign(
+            { id: user._id, email: user.email},
+            process.env.SECRET_JWT!,
+            { expiresIn: "3d" }
+        );
+        const { password: userPassword, ...otherDetails } = user._doc;
         const response = NextResponse.json({
-            message: 'Successfully logged in to the system!',
+            message: "Successfully logged in to the system.",
+            user: otherDetails,
             success: true
         });
-        response.cookies.set('token', token, { httpOnly: true });
+        response.cookies.set("access_token", token, {
+            httpOnly: true,
+            maxAge: 3 * 24 * 60 * 60,
+            path: "/"
+        });
         return response;
     } catch(error){
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 
-
-// uyllrd1oc2
+// user template: [x]
+// pass template: uyllrd1oc2
