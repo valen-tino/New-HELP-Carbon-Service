@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String },
   password: { type: String, required: true },
-  contactNumber: { type: String, required: true },
+  contactNumber: { type: String },
   preferences: {
     reminderFrequency: {
       type: String,
