@@ -14,8 +14,9 @@ const activitySchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
+  username: { type: String },
   password: { type: String, required: true },
+  contactNumber: { type: String },
   preferences: {
     reminderFrequency: {
       type: String,
@@ -23,6 +24,7 @@ const userSchema = new mongoose.Schema({
       default: 'weekly',
     },
     transportationPreferences: [String],
+    energyPreferences: [String],
     dietaryPreferences: [String],
   },
   activities: [activitySchema],

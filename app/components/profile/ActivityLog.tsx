@@ -21,8 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-const profileSchema = z.object({
+//
+const activitySchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   reminderFrequency: z.enum(['daily', 'weekly', 'monthly']),
@@ -30,21 +30,19 @@ const profileSchema = z.object({
   dietaryPreferences: z.array(z.string()),
 });
 
-export function ProfileForm(){
+export function ActivityLog(){
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(activitySchema),
     defaultValues: {
-      name: '',
-      email: '',
-      reminderFrequency: 'weekly',
-      transportationPreferences: [],
-      dietaryPreferences: [],
+      transportationMode: '',
+      energyUsage: 0,
+      meals: '',
     },
   });
 
-  async function onSubmit(values: z.infer<typeof profileSchema>) {
+  async function onSubmit(values: z.infer<typeof activitySchema>) {
     setIsLoading(true);
     try {
       const response = await fetch('/api/user', {
@@ -56,10 +54,10 @@ export function ProfileForm(){
       });
       
       if (!response.ok) {
-        throw new Error('Failed to save profile');
+        throw new Error('Failed to save activity');
       }
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('Error saving activity:', error);
     } finally {
       setIsLoading(false);
     }
@@ -68,28 +66,15 @@ export function ProfileForm(){
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}
-          name="email"
+          name="transportationMode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Transportation Mode</FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -98,27 +83,12 @@ export function ProfileForm(){
         
         <FormField
           control={form.control}
-          name="transportationPreferences"
+          name="energyUsage"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Transportation Preferences</FormLabel>
+              <FormLabel>Energy Usage</FormLabel>
               <FormControl>
-                <Input type="text" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-
-      <FormField
-          control={form.control}
-          name="dietaryPreferences"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Dietary Preferences</FormLabel>
-              <FormControl>
-                <Input type="text" {...field} />
+                <Input type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -127,32 +97,20 @@ export function ProfileForm(){
 
         <FormField
           control={form.control}
-          name="reminderFrequency"
+          name="meals"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Reminder Frequency</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select frequency" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormLabel>Meals</FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Saving...' : 'Save Profile'}
+          {isLoading ? 'Saving...' : 'Save Activity'}
         </Button>
       </form>
     </Form>
