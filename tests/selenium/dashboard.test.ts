@@ -1,8 +1,8 @@
-import { Builder, By, until } from 'selenium-webdriver';
+import { Builder, By, until, WebDriver } from 'selenium-webdriver';
 import { expect } from '@jest/globals';
 
 describe('Dashboard Page', () => {
-  let driver;
+  let driver: WebDriver;
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser('chrome').build();
