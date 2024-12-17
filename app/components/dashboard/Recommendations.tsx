@@ -1,26 +1,79 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
-import { Leaf, Bus, Lightbulb } from 'lucide-react';
+import { CarbonFootprint } from '@/types/others';
+import { Lightbulb } from 'lucide-react';
 
-export function Recommendations() {
+interface Props {
+  footprint: CarbonFootprint;
+}
+
+export default function Recommendations({ footprint }: Props) {
+  const getRecommendations = () => {
+    const recommendations = [];
+    
+    if (footprint.transportationEmission > 100) {
+      recommendations.push({
+        category: 'Transportation',
+        tips: [
+          'Consider using public transportation more frequently',
+          'Try carpooling with colleagues',
+          'Switch to an electric or hybrid vehicle',
+        ],
+      });
+    }
+    
+    if (footprint.energyEmission > 50) {
+      recommendations.push({
+        category: 'Energy',
+        tips: [
+          'Install LED light bulbs',
+          'Use a programmable thermostat',
+          'Consider solar panel installation',
+        ],
+      });
+    }
+    
+    if (footprint.dietaryEmission > 30) {
+      recommendations.push({
+        category: 'Diet',
+        tips: [
+          'Try meat-free Mondays',
+          'Choose local and seasonal produce',
+          'Reduce food waste through meal planning',
+        ],
+      });
+    }
+    
+    return recommendations;
+  };
+
+  const recommendations = getRecommendations();
+
   return (
-    <Card className="p-4">
-      <h3 className="font-semibold mb-4">Personalized Recommendations</h3>
-      <ul className="space-y-4">
-        <li className="flex items-start space-x-3">
-          <Bus className="h-5 w-5 text-green-500 mt-0.5" />
-          <p>Consider using public transportation more frequently to reduce your transportation emissions.</p>
-        </li>
-        <li className="flex items-start space-x-3">
-          <Lightbulb className="h-5 w-5 text-green-500 mt-0.5" />
-          <p>Switch to LED bulbs to reduce your energy consumption.</p>
-        </li>
-        <li className="flex items-start space-x-3">
-          <Leaf className="h-5 w-5 text-green-500 mt-0.5" />
-          <p>Try incorporating more plant-based meals into your diet.</p>
-        </li>
-      </ul>
-    </Card>
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="flex items-center mb-4">
+        <Lightbulb className="w-6 h-6 mr-2 text-yellow-500" />
+        <h2 className="text-xl font-semibold">Personalized Recommendations</h2>
+      </div>
+      
+      <div className="space-y-6">
+        {recommendations.map((rec, index) => (
+          <div key={index} className="space-y-2">
+            <h3 className="text-lg font-medium text-gray-800">{rec.category}</h3>
+            <ul className="list-disc list-inside space-y-1 text-gray-600">
+              {rec.tips.map((tip, tipIndex) => (
+                <li key={tipIndex}>{tip}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        
+        {recommendations.length === 0 && (
+          <p className="text-gray-600">
+            Great job! Your carbon footprint is relatively low. Keep up the good work!
+          </p>
+        )}
+      </div>
+    </div>
   );
 }

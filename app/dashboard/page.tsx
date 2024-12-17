@@ -1,63 +1,107 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card } from '@/components/ui/card';
-import { Activity, CarbonFootprint } from '@/types/user';
-import { CarbonFootprintCards } from '@/app/components/dashboard/CarbonFootprintCards';
-import { CarbonFootprintChart } from '@/app/components/dashboard/CarbonFootprintChart';
-import { Recommendations } from '@/app/components/dashboard/Recommendations';
+import { Activity, ActivityFormData, CarbonFootprint } from '../../types/others';
+import ActivityForm from '../components/dashboard/ActivityForm';
+import CarbonFootprintChart from '../components/dashboard/CarbonFootprintChart';
+import Recommendations from '../components/dashboard/Recommendations';
+import { Calculator } from 'lucide-react';
+import { calculateEmissions } from '../../lib/calculations';
 
 export default function DashboardPage() {
+
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [carbonFootprint, setCarbonFootprint] = useState<CarbonFootprint>({
-    transportation: 0,
-    energy: 0,
-    diet: 0,
-    total: 0,
+  const [footprint, setFootprint] = useState<CarbonFootprint>({
+    transportationEmission: 0,
+    energyEmission: 0,
+    dietaryEmission: 0,
+    totalEmission: 0,
   });
 
-  useEffect(() => {
-    // In a real app, fetch user's activities and carbon footprint
-    const mockActivities = [
-      { date: new Date('2024-01'), transportation: 400, energy: 240, diet: 320, type: 'transportation', value: 400, category: 'transportation' },
-      { date: new Date('2024-02'), transportation: 300, energy: 139, diet: 221, type: 'energy', value: 139, category: 'energy' },
-      { date: new Date('2024-03'), transportation: 200, energy: 980, diet: 229, type: 'diet', value: 229, category: 'diet' },
-    ];
-    setActivities(mockActivities);
-
-    const mockFootprint = {
-      transportation: 900,
-      energy: 1359,
-      diet: 770,
-      total: 3029,
+  const handleActivitySubmit = (data: ActivityFormData) => {
+    const emissionValue = calculateEmissions(data.type, data.category, data.value);
+    const newActivity: Activity = {
+      ...data,
+      emissionValue,
+      date: new Date().toISOString(),
     };
-    setCarbonFootprint(mockFootprint);
-  }, []);
+
+    setActivities([...activities, newActivity]);
+
+    const newFootprint = { ...footprint };
+    if (data.type === 'transportation') {
+      newFootprint.transportationEmission += emissionValue;
+    } else if (data.type === 'energy') {
+      newFootprint.energyEmission += emissionValue;
+    } else {
+      newFootprint.dietaryEmission += emissionValue;
+    }
+    newFootprint.totalEmission = newFootprint.transportationEmission + 
+                                newFootprint.energyEmission + 
+                                newFootprint.dietaryEmission;
+    setFootprint(newFootprint);
+  };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Carbon Footprint Dashboard</h1>
-      
-      <CarbonFootprintCards carbonFootprint={carbonFootprint} />
+    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="text-center">
+          <div className="flex items-center justify-center mb-4">
+            <Calculator className="w-10 h-10 text-blue-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Carbon Footprint Calculator</h1>
+          <p className="mt-2 text-gray-600">Track and analyze your environmental impact</p>
+        </div>
 
-      <Tabs defaultValue="trends" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
-          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-        </TabsList>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div>
+            <ActivityForm onSubmit={handleActivitySubmit} />
+          </div>
+          <div>
+            <CarbonFootprintChart data={footprint} />
+          </div>
+        </div>
 
-        <TabsContent value="trends">
-          <Card className="p-4">
-            <h3 className="font-semibold mb-4">Carbon Footprint Trends</h3>
-            <CarbonFootprintChart activities={activities} />
-          </Card>
-        </TabsContent>
+        <div>
+          <Recommendations footprint={footprint} />
+        </div>
 
-        <TabsContent value="recommendations">
-          <Recommendations />
-        </TabsContent>
-      </Tabs>
+        {activities.length > 0 && (
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Emissions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {activities.map((activity, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(activity.date).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {activity.type}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {activity.category}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {activity.emissionValue.toFixed(2)} kg CO2e
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
