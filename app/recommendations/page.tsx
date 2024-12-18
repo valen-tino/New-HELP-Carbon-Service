@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/ui/card';
 import { Recommendations } from '@/app/components/dashboard/Recommendations';
+import { useState, useEffect } from 'react';
 
 export default function RecommendationsPage() {
   return (

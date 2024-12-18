@@ -32,7 +32,7 @@ export default function RegisterPage(){
             name: '',
             email: '',
             username: '',
-            password: ''
+            contactNumber: '',
         },
     });
     
@@ -54,7 +54,7 @@ export default function RegisterPage(){
             if(!res.ok){
                 throw new Error(result.error || 'Something went wrong.');
             }
-            setSuccess('Successfully registred the account.');
+            setSuccess('Successfully registred the account. Redirecting to the login page.');
             form.reset();
             router.push('/login');
         } catch(error: any){
@@ -84,7 +84,7 @@ export default function RegisterPage(){
                             name="name"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>Full Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Insert your name here" {...field}/>
                                     </FormControl>
@@ -112,7 +112,10 @@ export default function RegisterPage(){
                                 <FormItem>
                                     <FormLabel>New Username</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Insert your username here" {...field}/>
+                                        <Input
+                                            placeholder="Insert your new username here" 
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -120,16 +123,12 @@ export default function RegisterPage(){
                         />
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="contactNumber"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>New Password</FormLabel>
+                                    <FormLabel>Contact Number</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="password" 
-                                            placeholder="Insert your password here" 
-                                            {...field}
-                                        />
+                                        <Input placeholder="Insert your contact number here" {...field}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

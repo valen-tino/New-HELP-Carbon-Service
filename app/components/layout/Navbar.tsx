@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -14,7 +16,44 @@ const navigation = [
 ];
 
 export function Navbar() {
+  const [user, setUser] = useState<any>(null);
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchUserData();
+  });
+
+  const fetchUserData = async () => {
+    const res = await fetch('/api/auth/session', {
+      method: 'GET',
+      credentials: 'include'
+    });
+    const data = await res.json();
+    if(res.ok && data.user){
+      setUser(data.user);
+    } else {
+      setUser(null);
+    }
+  }
+  
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      setUser(null);
+      router.push('/');
+    } catch(error){
+      console.error('Error logging out' + error);
+    }
+  }
+
+  const protectedRoute = async (href: string) => {
+    if(!user && href !== '/'){
+      router.push('/login');
+    } else {
+      router.push(href);
+    }
+  }
 
   return (
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -33,6 +72,7 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => protectedRoute(item.href)}
                   className={cn(
                     'transition-colors hover:text-foreground/80',
                     pathname === item.href
@@ -55,11 +95,18 @@ export function Navbar() {
             {/* Add search or other controls here if needed */}
           </div>
           <nav className="flex items-center">
-            <Link href="/login">
-              <Button variant="ghost" size="sm">
-                Sign in
+            {user ? (
+              // Scenario if the user logged in, display the sign out button
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                Sign Out
               </Button>
-            </Link>
+            ) : (
+              <Link href="/login">
+                <Button variant="ghost" size="sm">
+                  Sign in
+                </Button>
+              </Link>
+            )}
           </nav>
         </div>
 
@@ -72,6 +119,7 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => protectedRoute(item.href)}
                   className={cn(
                     'transition-colors hover:text-foreground/80',
                     pathname === item.href

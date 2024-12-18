@@ -31,22 +31,29 @@ export async function POST(req: NextRequest){
 
         const tokenData = {
             id: user._id,
+            name: user.name,
             email: user.email,
             username: user.username,
         };
-        const token = await jwt.sign(tokenData, process.env.SECRET_JWT!, {
+        const token = jwt.sign(tokenData, process.env.SECRET_JWT!, {
             expiresIn: '3d'
         });
 
         const response = NextResponse.json({
             message: 'Successfully logged in to the system!',
-            success: true
-        });
-        response.cookies.set('token', token, { httpOnly: true });
+            success: true,
+            user: {
+                id: user._id,
+                name: user.name,
+                username: user.username,
+                email: user.email
+            }
+        }, { status: 200});
+        response.cookies.set('token', token, { httpOnly: true, path: '/' });
         return response;
-    } catch(err: any){
+    } catch(error: any){
         return NextResponse.json({ 
-            error: err.message || 'Internal Server Error.' 
+            error: error.message || 'Internal Server Error.' 
         }, { status: 500 });
     }
 }
