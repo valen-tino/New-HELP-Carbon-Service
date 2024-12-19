@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Remember to install jwt-decode
 import { User } from '@/types/user';
 import { useRouter } from "next/navigation";
 
