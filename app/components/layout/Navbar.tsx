@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Home, BarChart2, UserCircle, Leaf } from 'lucide-react';
+import { useSession } from '@/hooks/use-session';
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -16,44 +17,9 @@ const navigation = [
 ];
 
 export function Navbar() {
-  const [user, setUser] = useState<any>(null);
+  const { user, handleSignOut } = useSession();
   const pathname = usePathname();
-  const router = useRouter();
-
-  useEffect(() => {
-    fetchUserData();
-  });
-
-  const fetchUserData = async () => {
-    const res = await fetch('/api/auth/session', {
-      method: 'GET',
-      credentials: 'include'
-    });
-    const data = await res.json();
-    if(res.ok && data.user){
-      setUser(data.user);
-    } else {
-      setUser(null);
-    }
-  }
-  
-  const handleSignOut = async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-      setUser(null);
-      router.push('/');
-    } catch(error){
-      console.error('Error logging out' + error);
-    }
-  }
-
-  const protectedRoute = async (href: string) => {
-    if(!user && href !== '/'){
-      router.push('/login');
-    } else {
-      router.push(href);
-    }
-  }
+  const router = useRouter();  
 
   return (
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -72,7 +38,6 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => protectedRoute(item.href)}
                   className={cn(
                     'transition-colors hover:text-foreground/80',
                     pathname === item.href
@@ -96,14 +61,16 @@ export function Navbar() {
           </div>
           <nav className="flex items-center">
             {user ? (
-              // Scenario if the user logged in, display the sign out button
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                Sign Out
-              </Button>
+              <>
+                <span className="mr-4 text-sm font-medium text-gray">{user.name}</span>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              </>
             ) : (
               <Link href="/login">
                 <Button variant="ghost" size="sm">
-                  Sign in
+                  Sign In
                 </Button>
               </Link>
             )}
@@ -119,7 +86,6 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => protectedRoute(item.href)}
                   className={cn(
                     'transition-colors hover:text-foreground/80',
                     pathname === item.href

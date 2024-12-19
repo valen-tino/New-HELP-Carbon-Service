@@ -29,10 +29,10 @@ export default function RegisterPage(){
 
     const form = useForm({
         defaultValues: {
-            name: '',
-            email: '',
-            username: '',
-            contactNumber: '',
+            name: "",
+            email: "",
+            username: "",
+            contactNumber: "",
         },
     });
     
@@ -42,7 +42,7 @@ export default function RegisterPage(){
         setSuccess('');
     
         try {
-            const res = await fetch('/api/auth/signup', {
+            const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -54,6 +54,7 @@ export default function RegisterPage(){
             if(!res.ok){
                 throw new Error(result.error || 'Something went wrong.');
             }
+
             setSuccess('Successfully registred the account. Redirecting to the login page.');
             form.reset();
             router.push('/login');

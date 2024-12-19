@@ -20,43 +20,43 @@ import {
     AlertTitle
 } from '@/components/ui/alert';
 import { useRouter } from "next/navigation";
+import { useSession } from "@/hooks/use-session";
 
 export default function LoginPage(){
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-    const router = useRouter();
-
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const form = useForm({
         defaultValues: {
-            username: '',
-            password: ''
+            username: "",
+            password: ""
         },
     });
+    const router = useRouter();
+    const { handleSignIn } = useSession();
 
-    async function onSubmit(values: any){
-        setIsLoading(true);
-        setError('');
-        setSuccess('');
-    
+    const onSubmit = async (data: { username: string; password: string }) => {
+        setIsLoading(false);
+        setError("");
+        setSuccess("");
         try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify(values),
-            })
-    
+                body: JSON.stringify(data)
+            });
             const result = await res.json();
             if(!res.ok){
-                throw new Error(result.error || 'Something went wrong.');
+                throw new Error(result.error || "Something went wrong.");
             }
-            setSuccess('Successfully logged in to the system.');
+            setSuccess("Successfully logged in to the system.");
+            handleSignIn(result.token);
             form.reset();
             router.push('/dashboard');
         } catch(error: any){
-            setError(error.message);
+            console.error(error.message);
         } finally {
             setIsLoading(false);
         }

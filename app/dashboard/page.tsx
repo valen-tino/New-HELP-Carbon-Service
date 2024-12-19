@@ -7,9 +7,10 @@ import CarbonFootprintChart from '../components/dashboard/CarbonFootprintChart';
 import Recommendations from '../components/dashboard/Recommendations';
 import { Calculator } from 'lucide-react';
 import { calculateEmissions } from '../../lib/calculations';
-import { useRouter } from 'next/navigation';
+import { useSession } from '@/hooks/use-session';
 
 export default function DashboardPage() {
+  const { user } = useSession();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [footprint, setFootprint] = useState<CarbonFootprint>({
     transportationEmission: 0,
@@ -17,25 +18,6 @@ export default function DashboardPage() {
     dietaryEmission: 0,
     totalEmission: 0,
   });
-  const [user, setUser] = useState<any>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    // Fetch the user session
-    const fetchUserData = async () => {
-      const res = await fetch('/api/auth/session', {
-        method: 'GET',
-        credentials: 'include'
-      });
-      const data = await res.json();
-      if(res.ok){
-        setUser(data.user);
-      } else {
-        router.push('/login');
-      }
-    }
-    fetchUserData();
-  }, [router])
 
   const handleActivitySubmit = (data: ActivityFormData) => {
     const emissionValue = calculateEmissions(data.type, data.category, data.value);
@@ -63,7 +45,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-sm font-bold text-gray-900">Welcome, {user ? user.name : 'Guest'}</h1>
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">
