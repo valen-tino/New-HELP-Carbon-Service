@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 export const useSession = () => {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -16,6 +17,7 @@ export const useSession = () => {
           router.push('/login');
           setUser(null);
         }
+        setLoading(false);
     }, [router]);
     
     const handleSignOut = async () => {
@@ -33,5 +35,5 @@ export const useSession = () => {
         setUser(decoded);
     }
 
-    return { user, handleSignOut, handleSignIn }
+    return { user, loading, handleSignOut, handleSignIn }
 }

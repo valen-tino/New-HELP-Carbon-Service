@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Navbar } from '@/app/components/layout/Navbar';
+import { ProtectedRoute } from './components/layout/ProtectedRoute';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,11 +16,19 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const ProtectedPaths = ["/dashboard", "/profile", "/recommendations"];
+  const isPathProtected = typeof window !== "undefined" &&
+                          ProtectedPaths.includes(window.location.pathname);
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        {children}
+        {isPathProtected ? (
+          <ProtectedRoute>{children}</ProtectedRoute>
+        ) : (
+          children
+        )}
       </body>
     </html>
   );
