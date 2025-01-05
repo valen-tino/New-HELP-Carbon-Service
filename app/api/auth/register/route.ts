@@ -5,6 +5,13 @@ import validator from 'validator';
 import generator from "generate-password";
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * 
+ * @register
+ * Register function
+ * 
+ */
+
 export async function POST(req: NextRequest){
     try {
         await connectDB();
@@ -39,7 +46,7 @@ export async function POST(req: NextRequest){
             uppercase: false,
             lowercase: true,
         });
-        console.log(generatedPassword); 
+        console.log(generatedPassword); // Fetch the generated password
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(generatedPassword, salt);

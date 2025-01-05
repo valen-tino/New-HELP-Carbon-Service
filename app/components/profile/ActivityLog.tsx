@@ -100,7 +100,7 @@ export function ActivityLog(){
           name="meals"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Meals</FormLabel>
+              <FormLabel>Diet</FormLabel>
               <FormControl>
                 <Input type="text" {...field} />
               </FormControl>
