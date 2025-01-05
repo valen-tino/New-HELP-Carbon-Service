@@ -5,6 +5,7 @@ import connectDB from './config/db.js';
 import authRouter from './routes/auth.js';
 import activitiesRouter from './routes/activities.js';
 import blogsRouter from './routes/blogs.js';
+import historyRouter from './routes/history.js';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/activities', activitiesRouter);
 app.use('/blogs', blogsRouter);
+app.use('/history', historyRouter);
 
 // Basic route for testing
 app.get('/', (req, res) => {

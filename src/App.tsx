@@ -18,6 +18,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Activities from './pages/Activities';
 import Community from './pages/Community';
+import History from './pages/History';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
@@ -57,6 +58,14 @@ export default function App() {
             <PrivateRoute>
               <AuthLayout>
                 <Activities />
+              </AuthLayout>
+            </PrivateRoute>
+          } />
+          {/* Add Historical Data Route */}
+          <Route path="/history" element={
+            <PrivateRoute>
+              <AuthLayout>
+                <History />
               </AuthLayout>
             </PrivateRoute>
           } />

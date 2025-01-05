@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ActivityForm from '../components/activities/ActivityForm';
 import ActivityList from '../components/activities/ActivityList';
 import { Activity } from '../types/activity';
 import { getActivities } from '../services/activityService';
 import { CalendarDays } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const Activities = () => {
-  const [activities, setActivities] = useState<Activity[]>([]); // Initialize as empty array
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -18,17 +18,16 @@ const Activities = () => {
   const loadActivities = async () => {
     try {
       const data = await getActivities();
-      setActivities(data || []); // Ensure we always set an array
+      setActivities(data || []);
     } catch (error) {
       console.error('Error loading activities:', error);
-      setActivities([]); // Set empty array on error
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleActivityLogged = (newActivity: Activity) => {
-    setActivities(prevActivities => [newActivity, ...prevActivities]);
+  const handleViewHistory = () => {
+    navigate('/history'); // Navigate to the history page
   };
 
   return (
@@ -36,8 +35,8 @@ const Activities = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-800">Log Activities</h1>
         <button 
-          onClick={() => navigate('/history')}
-          className="flex items-center gap-2 px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700"
+          onClick={handleViewHistory}
+          className="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
         >
           <CalendarDays className="w-5 h-5" />
           View History
@@ -47,7 +46,7 @@ const Activities = () => {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="p-6 bg-white rounded-lg shadow-md">
           <h2 className="mb-4 text-xl font-semibold text-gray-700">New Activity</h2>
-          <ActivityForm onActivityLogged={handleActivityLogged} />
+          <ActivityForm onActivityLogged={loadActivities} />
         </div>
 
         <div className="p-6 bg-white rounded-lg shadow-md">
