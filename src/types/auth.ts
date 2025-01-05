@@ -1,8 +1,11 @@
+export type UserRole = 'user' | 'admin';
+
 export interface User {
   id: string;
   name: string;
   email: string;
   username: string;
+  role: UserRole;
   reminderFrequency: 'daily' | 'weekly' | 'monthly';
 }
 
