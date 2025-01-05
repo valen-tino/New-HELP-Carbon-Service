@@ -11,7 +11,7 @@ const PublicFooter = () => {
           <div className="col-span-1">
             <Link to="/" className="flex items-center">
               <Leaf className="w-8 h-8 text-green-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">EcoTracker</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">HCS</span>
             </Link>
             <p className="mt-4 text-sm text-gray-600">
               Track and reduce your carbon footprint for a sustainable future.

@@ -14,7 +14,7 @@ const PublicNavbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <Leaf className="w-8 h-8 text-green-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">EcoTracker</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">HCS</span>
             </Link>
             
             <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
