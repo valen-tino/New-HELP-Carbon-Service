@@ -11,7 +11,7 @@ import AdminLayout from './components/layout/AdminLayout';
 import Landing from './pages/Landing';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import PublicEducation from './pages/public/Education';
+import Blogs from './pages/public/Blogs';
 
 // User Pages
 import Dashboard from './pages/Dashboard';
@@ -32,7 +32,7 @@ export default function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
-          <Route path="/explore" element={<PublicEducation />} />
+          <Route path="/blogs" element={<Blogs />} />
           
           {/* Auth Routes */}
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />

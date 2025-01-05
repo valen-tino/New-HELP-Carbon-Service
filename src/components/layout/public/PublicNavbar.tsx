@@ -21,8 +21,8 @@ const PublicNavbar = () => {
               <NavLink to="/" isActive={isActive('/')}>
                 Home
               </NavLink>
-              <NavLink to="/explore" isActive={isActive('/explore')}>
-                Education
+              <NavLink to="/blogs" isActive={isActive('/blogs')}>
+                Blogs
               </NavLink>
             </div>
           </div>
