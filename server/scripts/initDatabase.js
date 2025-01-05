@@ -53,9 +53,6 @@ const initDatabase = async () => {
       try {
         const userExists = await User.findOne({ email: userData.email });
         if (!userExists) {
-          const salt = await bcrypt.genSalt(10);
-          userData.password = await bcrypt.hash(userData.password, salt);
-          
           await User.create(userData);
           console.log(`Created user: ${userData.email}`);
         } else {

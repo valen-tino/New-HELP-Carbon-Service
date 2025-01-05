@@ -1,15 +1,16 @@
 import React from 'react';
+import PublicLayout from '../components/layout/public/PublicLayout';
 import Hero from '../components/landing/Hero';
 import Features from '../components/landing/Features';
 import CallToAction from '../components/landing/CallToAction';
 
 const Landing = () => {
   return (
-    <div className="bg-white">
+    <PublicLayout>
       <Hero />
       <Features />
       <CallToAction />
-    </div>
+    </PublicLayout>
   );
 };
 
