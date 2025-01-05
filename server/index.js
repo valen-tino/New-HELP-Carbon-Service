@@ -14,10 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', authRouter);
-app.use('/api/activities', activitiesRouter);
-app.use('/api/blogs', blogsRouter);
+// Routes - Remove /api prefix from here since we'll handle it in the frontend
+app.use('/auth', authRouter);
+app.use('/activities', activitiesRouter);
+app.use('/blogs', blogsRouter);
 
 // Basic route for testing
 app.get('/', (req, res) => {
@@ -26,13 +26,9 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-// Start server
 const startServer = async () => {
   try {
-    // Connect to MongoDB
     await connectDB();
-    
-    // Start listening
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
