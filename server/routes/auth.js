@@ -2,9 +2,44 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import validator from "validator";
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
+//Register
+router.post('/register', async (req, res) => {
+  try {
+    if(!req.body.name ||
+      !req.body.email ||
+      !req.body.username ||
+      !req.body.password){
+      return res.status(400).json({ message: 'Please fill all the field!' });
+    }
+
+    if(!validator.isEmail(req.body.email)){
+      return res.status(400).json({ message: 'Email is not valid!' });
+    }
+
+    const checkEmailExists = await User.findOne({ email: req.body.email });
+    if(checkEmailExists){
+      return res.status(400).json({ message: 'Email is already registered!' });
+    }
+    
+    const verificationToken = Math.floor(100000 + Math.random() * 900000);
+    console.log(verificationToken);
+
+    const user = new User({
+      ...req.body,
+      password: req.body.password,
+      verificationToken,
+    });
+    await user.save();
+    res.status(200).json("User has been created!");
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // Login user
 router.post('/login', async (req, res) => {
