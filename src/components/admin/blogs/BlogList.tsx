@@ -2,6 +2,7 @@ import React from 'react';
 import { Edit, Trash2 } from 'lucide-react';
 import { Blog } from '../../../types/blog';
 import { deleteBlog } from '../../../services/blogService';
+import { formatShortDate } from '../../../utils/dateUtils';
 
 interface Props {
   blogs: Blog[];
@@ -53,7 +54,7 @@ const BlogList: React.FC<Props> = ({ blogs, onEdit, onDelete }) => {
                 </span>
               </td>
               <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                {new Date(blog.uploaded_at).toLocaleDateString()}
+                {formatShortDate(blog.published_at)}
               </td>
               <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
                 <button 
