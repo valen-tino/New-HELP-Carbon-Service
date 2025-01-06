@@ -65,4 +65,47 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
+router.put('/update', protect, async (req, res) => {
+  const { name, email, username } = req.body;
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if(!user){
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if(name && name !== user.name){
+      user.name = name;
+    }
+
+    if(email && email !== user.email){
+      const checkEmail = await User.findOne({ email: email.toLowerCase() });
+      if(checkEmail){
+        return res.status(400).json({ message: 'Sorry, email has already been used.' });
+      }
+      user.email = email.toLowerCase();
+    }
+
+    if(username && username !== user.username){
+      const checkUsername = await User.findOne({ username: username.trim() });
+      if(checkUsername){
+        return res.status(400).json({ message: 'Username has already been used.' });
+      }
+      user.username = username.trim();
+    }
+
+    await user.save();
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+      reminderFrequency: user.reminderFrequency
+    });
+  } catch (error) {
+    console.error('Update error: ', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 export default router;

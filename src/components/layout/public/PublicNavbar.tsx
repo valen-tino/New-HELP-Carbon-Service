@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Leaf } from 'lucide-react';
 
 const PublicNavbar = () => {
   const location = useLocation();
+  const [mobileRatio, setMobileRatio] = useState(window.innerWidth < 540);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMobileRatio(window.innerWidth < 540);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  });
   
   const isActive = (path: string) => location.pathname === path;
   
@@ -14,7 +25,9 @@ const PublicNavbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <Leaf className="w-8 h-8 text-green-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">HELP CarbonFootPrint System</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">
+                {mobileRatio ? "HCS" : "HELP CarbonFootPrint System"}
+              </span>
             </Link>
             
             <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
@@ -58,7 +71,7 @@ const NavLink = ({ to, isActive, children }: { to: string; isActive: boolean; ch
       isActive
         ? 'border-green-500 text-gray-900'
         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-    }`}
+    } sm:text-xs md:text-sm`}
   >
     {children}
   </Link>
