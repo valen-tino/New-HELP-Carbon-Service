@@ -1,5 +1,5 @@
 import api from './api';
-import { LoginCredentials, RegisterData, User } from '../types/auth';
+import { LoginCredentials, RegisterData, User, UpdateData } from '../types/auth';
 
 export async function loginUser(credentials: LoginCredentials): Promise<User> {
   try {
@@ -21,6 +21,16 @@ export async function registerUser(data: RegisterData): Promise<User> {
     return user;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Registration failed');
+  }
+}
+
+export async function updateUser(data: UpdateData): Promise<User> {
+  try {
+    const response = await api.put('/auth/update', data);
+    const { user } = response.data;
+    return user;
+  } catch(error: any){
+    throw new Error(error.response?.data?.message || 'Failed to update the data');
   }
 }
 

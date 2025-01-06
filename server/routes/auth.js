@@ -6,6 +6,11 @@ import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// Register user
+/**
+ * Contents
+ */
+
 // Login user
 router.post('/login', async (req, res) => {
   try {

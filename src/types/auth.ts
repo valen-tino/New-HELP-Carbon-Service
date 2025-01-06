@@ -28,3 +28,9 @@ export interface RegisterData {
   password: string;
   confirmPassword: string;
 }
+
+export interface UpdateData {
+  name: string;
+  email: string;
+  username: string;
+}
