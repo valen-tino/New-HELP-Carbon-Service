@@ -3,7 +3,7 @@ import { AuthState, LoginCredentials, RegisterData, User } from '../types/auth';
 import { loginUser, registerUser, getCurrentUser } from '../services/authService';
 
 interface AuthContextType extends AuthState {
-  login: (credentials: LoginCredentials) => Promise<void>;
+  login: (credentials: LoginCredentials) => Promise<User>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
 }
@@ -75,13 +75,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth();
   }, []);
 
-  const login = async (credentials: LoginCredentials) => {
+  const login = async (credentials: LoginCredentials): Promise<User> => {
     dispatch({ type: 'AUTH_START' });
     try {
       const user = await loginUser(credentials);
       dispatch({ type: 'AUTH_SUCCESS', payload: user });
-    } catch (error) {
-      dispatch({ type: 'AUTH_FAILURE', payload: 'Invalid credentials' });
+      return user; // Return user for role-based redirection
+    } catch (error: any) {
+      dispatch({ type: 'AUTH_FAILURE', payload: error.message });
       throw error;
     }
   };
@@ -91,8 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const user = await registerUser(data);
       dispatch({ type: 'AUTH_SUCCESS', payload: user });
-    } catch (error) {
-      dispatch({ type: 'AUTH_FAILURE', payload: 'Registration failed' });
+    } catch (error: any) {
+      dispatch({ type: 'AUTH_FAILURE', payload: error.message });
       throw error;
     }
   };

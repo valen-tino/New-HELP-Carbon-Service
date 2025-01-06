@@ -1,19 +1,25 @@
 import axios from 'axios';
 
+// Create axios instance with /api prefix
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api'
+  baseURL: '/api'
 });
 
-// Add auth token to requests
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Request interceptor for adding auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
-// Handle auth errors
+// Response interceptor for handling auth errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {

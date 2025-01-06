@@ -1,47 +1,85 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import EmissionSummary from '../components/dashboard/EmissionSummary';
 import ProgressChart from '../components/dashboard/ProgressChart';
 import RecommendationCard from '../components/dashboard/RecommendationCard';
+import { getActivityStats } from '../services/activityService';
 import { generateRecommendations } from '../utils/recommendations';
+import type { ActivityStats } from '../types/activity';
 
 const Dashboard = () => {
-  // Example data - in production, this would come from your API
-  const emissions = {
-    transportation: 85,
-    energy: 120,
-    diet: 95
+  const [stats, setStats] = useState<ActivityStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const loadStats = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getActivityStats();
+      setStats(data);
+    } catch (err) {
+      setError('Failed to load dashboard statistics');
+      console.error('Error loading stats:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const previousEmissions = {
-    transportation: 100,
-    energy: 150,
-    diet: 90
-  };
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-12 h-12 border-b-2 border-green-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
-  const recommendations = generateRecommendations(emissions);
+  if (error) {
+    return (
+      <div className="py-8 text-center text-red-600">
+        {error}
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div className="py-8 text-center text-gray-600">
+        No data available
+      </div>
+    );
+  }
+
+  const recommendations = generateRecommendations({
+    transportation: stats.currentMonth.transportation,
+    energy: stats.currentMonth.energy,
+    diet: stats.currentMonth.diet
+  });
 
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-800">Carbon Footprint Dashboard</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {Object.entries(emissions).map(([category, value]) => (
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {Object.entries(stats.currentMonth).map(([category, value]) => (
           <EmissionSummary
             key={category}
             category={category}
             currentEmissions={value}
-            previousEmissions={previousEmissions[category]}
+            previousEmissions={stats.previousMonth[category]}
           />
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-700">Monthly Goals</h2>
+          <h2 className="text-xl font-semibold text-gray-700">Monthly Progress</h2>
           <ProgressChart
-            current={300}
-            target={400}
-            label="Total Emissions"
+            current={stats.progress}
+            target={100}
+            label="Emission Reduction Goal"
           />
         </div>
 
