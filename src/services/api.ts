@@ -2,10 +2,14 @@ import axios from 'axios';
 
 // Create axios instance with /api prefix
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
-// Request interceptor for adding auth token
+
+// Add request interceptor for auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -14,9 +18,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor for handling auth errors

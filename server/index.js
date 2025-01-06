@@ -6,6 +6,7 @@ import authRouter from './routes/auth.js';
 import activitiesRouter from './routes/activities.js';
 import blogsRouter from './routes/blogs.js';
 import historyRouter from './routes/history.js';
+import usersRouter from './routes/users.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/auth', authRouter);
 app.use('/activities', activitiesRouter);
 app.use('/blogs', blogsRouter);
 app.use('/history', historyRouter);
+app.use('/users', usersRouter);
 
 // Basic route for testing
 app.get('/', (req, res) => {

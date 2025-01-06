@@ -6,6 +6,7 @@ import validator from "validator";
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
+
 //Register
 router.post('/register', async (req, res) => {
   try {
@@ -25,7 +26,12 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Email is already registered!' });
     }
     
-    const verificationToken = Math.floor(100000 + Math.random() * 900000);
+    const verificationToken =  jwt.sign(
+      { role: 'user' },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
+
     console.log(verificationToken);
 
     const user = new User({
@@ -60,6 +66,10 @@ router.post('/login', async (req, res) => {
       console.log('Invalid password for:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    // Update last login time
+    user.lastLoginAt = new Date();
+    await user.save();
 
     // Generate token
     const token = jwt.sign(
