@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LogIn, AlertCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { LogIn, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { LoginCredentials } from '../../types/auth';
 
@@ -81,6 +81,13 @@ const LoginForm = () => {
           </>
         )}
       </button>
+      <Link
+        to="/"
+        className="flex items-center justify-center w-full px-4 py-2 mt-4 text-sm font-medium text-gray-600 bg-gray-100 border border-transparent rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+      >
+        <ArrowLeft className="w-5 h-5 mr-2" />
+        Back to Home
+      </Link>
     </form>
   );
 };
