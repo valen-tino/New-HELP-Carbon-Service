@@ -13,13 +13,52 @@ const UserInfo = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        
+        const currentUser = await getCurrentUser();
+        if(currentUser){
+          setUser(currentUser);
+          setEditData({
+            name: currentUser.name,
+            email: currentUser.email,
+            username: currentUser.username
+          });
+        }
+        setIsLoading(false);
       } catch(error: any){
         setError('Failed to fetch user data');
         setIsLoading(false);
       }
     }
   }, []);
+
+  const handleEditToggle = () => {
+    setIsEditing(true);
+  }
+
+  const handleUpdateUser = async () => {
+    if(!isEditing){
+      return;
+    }
+    setError(null);
+
+    try {
+      const updatedUser = await updateUser(editData);
+      setUser(updatedUser);
+      setIsEditing(false);
+    } catch(error: any){
+      setError(error.message || 'Failed to update the user profile.');
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!user) return <div>No user data available.</div>;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
