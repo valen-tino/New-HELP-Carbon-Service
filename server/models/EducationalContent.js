@@ -12,10 +12,6 @@ const educationalContentSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
   content_type: {
     type: String,
     enum: ['article', 'video', 'infographic'],
@@ -30,14 +26,34 @@ const educationalContentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  content_url: {
-    type: String,
-    required: true
+  content: {
+    article: {
+      body: String,
+      readingTime: Number
+    },
+    video: {
+      url: String,
+      duration: Number
+    },
+    infographic: {
+      imageUrl: String,
+      altText: String
+    }
   },
-  uploaded_at: {
+  tags: [String],
+  views: {
+    type: Number,
+    default: 0
+  },
+  published_at: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    get: (v) => v?.toISOString(),
+    set: (v) => new Date(v)
   }
+}, {
+  timestamps: true,
+  toJSON: { getters: true }
 });
 
 export default mongoose.model('EducationalContent', educationalContentSchema);

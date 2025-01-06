@@ -25,6 +25,7 @@ import AdminDashboard from './pages/admin/Dashboard';
 import AdminEducation from './pages/admin/Education';
 import AdminUsers from './pages/admin/Users';
 import AdminActivities from './pages/admin/Activities';
+import BlogDetail from './pages/BlogDetail';
 
 export default function App() {
   return (
@@ -34,6 +35,9 @@ export default function App() {
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/:category/:slug" element={<BlogDetail />} />
+
+          
           
           {/* Auth Routes */}
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />

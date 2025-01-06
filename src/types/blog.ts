@@ -1,17 +1,34 @@
+export type BlogType = 'article' | 'video' | 'infographic';
+
 export interface Blog {
-    educational_content_id: number;
-    admin_id: string;
-    user_id?: string;
-    content_type: 'article' | 'video' | 'infographic';
-    title: string;
-    description: string;
-    content_url: string;
-    uploaded_at: string;
-  }
-  
-  export interface BlogInput {
-    content_type: 'article' | 'video' | 'infographic';
-    title: string;
-    description: string;
-    content_url: string;
-  }
+  educational_content_id: number;
+  admin_id: string;
+  content_type: BlogType;
+  title: string;
+  description: string;
+  content: {
+    article?: {
+      body: string;
+      readingTime: number;
+    };
+    video?: {
+      url: string;
+      duration: number;
+    };
+    infographic?: {
+      imageUrl: string;
+      altText: string;
+    };
+  };
+  tags: string[];
+  published_at: string;
+  views: number;
+}
+
+export interface BlogInput {
+  content_type: BlogType;
+  title: string;
+  description: string;
+  content: Blog['content'];
+  tags: string[];
+}

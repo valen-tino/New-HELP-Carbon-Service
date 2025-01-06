@@ -1,20 +1,19 @@
-export const formatDate = (date: Date): string => {
-  return new Date(date).toLocaleDateString('en-US', {
+export const formatDate = (date: string | Date): string => {
+  const d = new Date(date);
+  return d.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   });
 };
 
-export const getPeriodLabel = (period: 'week' | 'month' | 'year'): string => {
-  switch (period) {
-    case 'week':
-      return 'Past 7 Days';
-    case 'month':
-      return 'Past Month';
-    case 'year':
-      return 'Past Year';
-    default:
-      return '';
-  }
+export const formatShortDate = (date: string | Date): string => {
+  const d = new Date(date);
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
