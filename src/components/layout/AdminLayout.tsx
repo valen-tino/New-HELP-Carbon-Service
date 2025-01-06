@@ -44,13 +44,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                   Users
                 </AdminNavLink>
                 
-                <AdminNavLink 
+                {/* <AdminNavLink 
                   to="/admin/activities"
                   icon={Activity}
                   isActive={location.pathname === '/admin/activities'}
                 >
                   Activities
-                </AdminNavLink>
+                </AdminNavLink> */}
               </div>
             </div>
 
