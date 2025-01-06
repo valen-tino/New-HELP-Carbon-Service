@@ -1,13 +1,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Leaf, LayoutDashboard, Activity, BookOpen, Users, UserCircle } from 'lucide-react';
+import { Leaf, LayoutDashboard, Activity, BookOpen, Users, UserCircle, MessageSquare } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Only show social link for users, not admins
+  const showSocial = user?.role === 'user';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -17,7 +20,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center">
                 <Leaf className="h-8 w-8 text-green-600" />
-                <span className="ml-2 text-xl font-bold text-gray-900">HELP CarbonFootPrint System</span>
+                <span className="ml-2 text-xl font-bold text-gray-900">HCS</span>
               </Link>
               
               <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
@@ -31,10 +34,17 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                   <span>Activities</span>
                 </NavLink>
                 
-                <NavLink to="/community" isActive={isActive('/community')}>
-                  <Users className="h-5 w-5" />
-                  <span>Community</span>
+                <NavLink to="/education" isActive={isActive('/education')}>
+                  <BookOpen className="h-5 w-5" />
+                  <span>Education</span>
                 </NavLink>
+                
+                {showSocial && (
+                  <NavLink to="/social" isActive={isActive('/social')}>
+                    <MessageSquare className="h-5 w-5" />
+                    <span>Social</span>
+                  </NavLink>
+                )}
               </div>
             </div>
 

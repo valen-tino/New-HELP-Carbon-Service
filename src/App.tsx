@@ -6,6 +6,7 @@ import AdminRoute from './components/auth/AdminRoute';
 import PublicRoute from './components/auth/PublicRoute';
 import AuthLayout from './components/layout/AuthLayout';
 import AdminLayout from './components/layout/AdminLayout';
+import UserRoute from './components/auth/UserRoute';
 
 // Public Pages
 import Landing from './pages/Landing';
@@ -26,6 +27,7 @@ import AdminEducation from './pages/admin/Education';
 import AdminUsers from './pages/admin/Users';
 import AdminActivities from './pages/admin/Activities';
 import BlogDetail from './pages/BlogDetail';
+import Social from './pages/Social';
 
 export default function App() {
   return (
@@ -73,12 +75,12 @@ export default function App() {
               </AuthLayout>
             </PrivateRoute>
           } />
-          <Route path="/community" element={
-            <PrivateRoute>
+          <Route path="/social" element={
+            <UserRoute>
               <AuthLayout>
-                <Community />
+                <Social />
               </AuthLayout>
-            </PrivateRoute>
+            </UserRoute>
           } />
 
           {/* Admin Routes */}
