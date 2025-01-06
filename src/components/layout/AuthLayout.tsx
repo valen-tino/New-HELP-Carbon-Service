@@ -17,7 +17,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center">
                 <Leaf className="h-8 w-8 text-green-600" />
-                <span className="ml-2 text-xl font-bold text-gray-900">EcoTracker</span>
+                <span className="ml-2 text-xl font-bold text-gray-900">HELP CarbonFootPrint System</span>
               </Link>
               
               <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
@@ -29,11 +29,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                 <NavLink to="/activities" isActive={isActive('/activities')}>
                   <Activity className="h-5 w-5" />
                   <span>Activities</span>
-                </NavLink>
-                
-                <NavLink to="/education" isActive={isActive('/education')}>
-                  <BookOpen className="h-5 w-5" />
-                  <span>Education</span>
                 </NavLink>
                 
                 <NavLink to="/community" isActive={isActive('/community')}>
