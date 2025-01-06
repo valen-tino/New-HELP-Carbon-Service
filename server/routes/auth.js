@@ -65,4 +65,15 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
+router.put('/update', protect, async (req, res) => {
+  try {
+    /** 
+     * Test
+     */
+  } catch (error) {
+    console.error('Update error: ', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 export default router;
