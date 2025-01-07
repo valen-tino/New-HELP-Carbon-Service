@@ -7,12 +7,6 @@ import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
-<<<<<<< HEAD
-// Register user
-/**
- * Contents
- */
-=======
 //Register
 router.post('/register', async (req, res) => {
   try {
@@ -52,7 +46,6 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
->>>>>>> 2ef4b5ef23b65b9b7fa9994efbf5a0cab29eaa1d
 
 // Login user
 router.post('/login', async (req, res) => {

@@ -8,13 +8,8 @@ const Navbar = () => {
       <div className="container px-4 mx-auto">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
-<<<<<<< HEAD
-            <Leaf className="h-6 w-6" />
-            <span className="font-bold text-xl">HELP CarbonFootPrint System</span>
-=======
             <Leaf className="w-6 h-6" />
             <span className="text-xl font-bold">HELP CarbonFootPrint</span>
->>>>>>> 2ef4b5ef23b65b9b7fa9994efbf5a0cab29eaa1d
           </Link>
           
           <div className="flex space-x-4">
