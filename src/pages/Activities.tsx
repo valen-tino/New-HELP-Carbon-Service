@@ -27,7 +27,7 @@ const Activities = () => {
   };
 
   const handleViewHistory = () => {
-    navigate('/history'); // Navigate to the history page
+    navigate('/history');
   };
 
   return (
@@ -36,30 +36,30 @@ const Activities = () => {
         <h1 className="text-3xl font-bold text-gray-800">Log Activities</h1>
         <button 
           onClick={handleViewHistory}
-          className="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
+          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
         >
-          <CalendarDays className="w-5 h-5" />
+          <CalendarDays className="h-5 w-5" />
           View History
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="p-6 bg-white rounded-lg shadow-md">
-          <h2 className="mb-4 text-xl font-semibold text-gray-700">New Activity</h2>
-          <ActivityForm onActivityLogged={loadActivities} />
-        </div>
+      {/* New Activity Card - Now at the top */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">New Activity</h2>
+        <ActivityForm onActivityLogged={loadActivities} />
+      </div>
 
-        <div className="p-6 bg-white rounded-lg shadow-md">
-          <h2 className="mb-4 text-xl font-semibold text-gray-700">Recent Activities</h2>
-          {isLoading ? (
-            <div className="py-8 text-center">
-              <div className="w-8 h-8 mx-auto border-b-2 border-green-600 rounded-full animate-spin"></div>
-              <p className="mt-2 text-gray-500">Loading activities...</p>
-            </div>
-          ) : (
-            <ActivityList activities={activities} />
-          )}
-        </div>
+      {/* Recent Activities Card - Now at the bottom */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Recent Activities</h2>
+        {isLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+            <p className="mt-2 text-gray-500">Loading activities...</p>
+          </div>
+        ) : (
+          <ActivityList activities={activities} />
+        )}
       </div>
     </div>
   );

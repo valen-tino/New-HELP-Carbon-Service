@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
     enum: ['daily', 'weekly', 'monthly'],
     default: 'weekly'
   },
+  lastLoginAt: {
+    type: Date,
+    default: Date.now
+  },
   createdAt: {
     type: Date,
     default: Date.now

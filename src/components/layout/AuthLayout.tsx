@@ -1,40 +1,50 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Leaf, LayoutDashboard, Activity, BookOpen, Users, UserCircle } from 'lucide-react';
+import { Leaf, LayoutDashboard, Activity, BookOpen, Users, UserCircle, MessageSquare } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Only show social link for users, not admins
+  const showSocial = user?.role === 'user';
 
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center">
-                <Leaf className="h-8 w-8 text-green-600" />
-                <span className="ml-2 text-xl font-bold text-gray-900">HELP CarbonFootPrint System</span>
+                <Leaf className="w-8 h-8 text-green-600" />
+                <span className="ml-2 text-xl font-bold text-gray-900">HCS</span>
               </Link>
               
               <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
                 <NavLink to="/dashboard" isActive={isActive('/dashboard')}>
-                  <LayoutDashboard className="h-5 w-5" />
+                  <LayoutDashboard className="w-5 h-5" />
                   <span>Dashboard</span>
                 </NavLink>
                 
                 <NavLink to="/activities" isActive={isActive('/activities')}>
-                  <Activity className="h-5 w-5" />
+                  <Activity className="w-5 h-5" />
                   <span>Activities</span>
                 </NavLink>
                 
-                <NavLink to="/community" isActive={isActive('/community')}>
-                  <Users className="h-5 w-5" />
-                  <span>Community</span>
-                </NavLink>
+                {/* <NavLink to="/education" isActive={isActive('/education')}>
+                  <BookOpen className="w-5 h-5" />
+                  <span>Education</span>
+                </NavLink> */}
+                
+                {showSocial && (
+                  <NavLink to="/social" isActive={isActive('/social')}>
+                    <MessageSquare className="w-5 h-5" />
+                    <span>Social</span>
+                  </NavLink>
+                )}
               </div>
             </div>
 
@@ -47,13 +57,13 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                     : 'text-gray-700 hover:text-green-600'
                 }`}
               >
-                <UserCircle className="h-5 w-5" />
+                <UserCircle className="w-5 h-5" />
                 <span>Profile</span>
               </Link>
               
               <button
                 onClick={logout}
-                className="ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                className="px-4 py-2 ml-4 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700"
               >
                 Sign out
               </button>
@@ -62,7 +72,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
         {children}
       </main>
     </div>

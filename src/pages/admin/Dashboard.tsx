@@ -30,7 +30,7 @@ const AdminDashboard = () => {
           </div>
         </Link>
 
-        <Link to="/admin/activities" 
+        {/* <Link to="/admin/activities" 
           className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
           <div className="flex items-center gap-4">
             <Activity className="h-8 w-8 text-green-600" />
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
               <p className="text-gray-600">Monitor user activities</p>
             </div>
           </div>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
