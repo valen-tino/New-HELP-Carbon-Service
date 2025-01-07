@@ -5,7 +5,6 @@ const UserInfo = () => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-semibold text-gray-700 mb-4">Personal Information</h2>
-      
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <User className="h-5 w-5 text-green-600" />
