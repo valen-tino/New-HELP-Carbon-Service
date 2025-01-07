@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-hot-toast';
 import { Bell, Car, Zap, Utensils } from 'lucide-react';
 import { ProfileFormData } from '../../types/profile';
 import { getUserProfile, updateUserProfile, updateReminderSettings } from '../../services/profileService';
@@ -60,9 +59,12 @@ const ProfileForm = () => {
         formData.reminderSettings.frequency,
         formData.reminderSettings.enabled
       );
-      toast.success('Profile updated successfully');
+      alert('Profile updated successfully');
+      window.location.reload(); // Reload the page after successful update
     } catch (error) {
-      toast.error('Failed to update profile');
+      console.error('Update failed:', error);
+      alert('Failed to update profile');
+      window.location.reload(); // Reload the page on error
     } finally {
       setIsSaving(false);
     }
