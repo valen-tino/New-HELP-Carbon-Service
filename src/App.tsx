@@ -18,7 +18,6 @@ import Blogs from './pages/public/Blogs';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Activities from './pages/Activities';
-import Community from './pages/Community';
 import History from './pages/History';
 
 // Admin Pages
@@ -39,8 +38,6 @@ export default function App() {
           <Route path="/blogs" element={<Blogs />} />
           <Route path="/blogs/:category/:slug" element={<BlogDetail />} />
 
-          
-          
           {/* Auth Routes */}
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
@@ -67,6 +64,7 @@ export default function App() {
               </AuthLayout>
             </PrivateRoute>
           } />
+
           {/* Add Historical Data Route */}
           <Route path="/history" element={
             <PrivateRoute>
@@ -75,6 +73,7 @@ export default function App() {
               </AuthLayout>
             </PrivateRoute>
           } />
+          
           <Route path="/social" element={
             <UserRoute>
               <AuthLayout>

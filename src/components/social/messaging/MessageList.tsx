@@ -13,10 +13,10 @@ const MessageList: React.FC<Props> = ({ messages, currentUserId, currentUser }) 
   return (
     <div className="space-y-4">
       {messages.map((message) => {
-        const isOwnMessage = message.sender_id._id === currentUserId;
+        const isOwnMessage = message.sender_id?._id === currentUserId;
         const senderName = isOwnMessage 
           ? currentUser.name 
-          : (message.sender_id.name || message.sender_id.username || 'Unknown User');
+          : (message.sender_id?.name || message.sender_id?.username || 'Unknown User');
         return (
           <div
             key={message._id}
