@@ -9,6 +9,7 @@ import historyRouter from './routes/history.js';
 import usersRouter from './routes/users.js';
 import messagesRouter from './routes/messages.js';
 import achievementsRouter from './routes/achievements.js';
+import profileRouter from './routes/profile.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use('/history', historyRouter);
 app.use('/users', usersRouter);
 app.use('/messages', messagesRouter);
 app.use('/achievements', achievementsRouter);
+app.use('/profile', profileRouter);
 
 // Basic route for testing
 app.get('/', (req, res) => {
