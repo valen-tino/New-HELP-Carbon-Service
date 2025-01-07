@@ -15,33 +15,33 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center">
-                <Leaf className="h-8 w-8 text-green-600" />
+                <Leaf className="w-8 h-8 text-green-600" />
                 <span className="ml-2 text-xl font-bold text-gray-900">HCS</span>
               </Link>
               
               <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
                 <NavLink to="/dashboard" isActive={isActive('/dashboard')}>
-                  <LayoutDashboard className="h-5 w-5" />
+                  <LayoutDashboard className="w-5 h-5" />
                   <span>Dashboard</span>
                 </NavLink>
                 
                 <NavLink to="/activities" isActive={isActive('/activities')}>
-                  <Activity className="h-5 w-5" />
+                  <Activity className="w-5 h-5" />
                   <span>Activities</span>
                 </NavLink>
                 
-                <NavLink to="/education" isActive={isActive('/education')}>
-                  <BookOpen className="h-5 w-5" />
+                {/* <NavLink to="/education" isActive={isActive('/education')}>
+                  <BookOpen className="w-5 h-5" />
                   <span>Education</span>
-                </NavLink>
+                </NavLink> */}
                 
                 {showSocial && (
                   <NavLink to="/social" isActive={isActive('/social')}>
-                    <MessageSquare className="h-5 w-5" />
+                    <MessageSquare className="w-5 h-5" />
                     <span>Social</span>
                   </NavLink>
                 )}
@@ -57,13 +57,13 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                     : 'text-gray-700 hover:text-green-600'
                 }`}
               >
-                <UserCircle className="h-5 w-5" />
+                <UserCircle className="w-5 h-5" />
                 <span>Profile</span>
               </Link>
               
               <button
                 onClick={logout}
-                className="ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                className="px-4 py-2 ml-4 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700"
               >
                 Sign out
               </button>
@@ -72,7 +72,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
         {children}
       </main>
     </div>
