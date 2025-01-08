@@ -28,8 +28,8 @@ const PublicFooter = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/explore" className="text-base text-gray-600 hover:text-green-600">
-                  Education
+                <Link to="/blogs" className="text-base text-gray-600 hover:text-green-600">
+                  Blogs
                 </Link>
               </li>
             </ul>
@@ -71,7 +71,7 @@ const PublicFooter = () => {
 
         <div className="pt-8 mt-8 border-t border-gray-200">
           <p className="text-base text-center text-gray-400">
-            © {new Date().getFullYear()} EcoTracker. All rights reserved.
+            © {new Date().getFullYear()} HELP CarbonFootPrint System. All rights reserved.
           </p>
         </div>
       </div>

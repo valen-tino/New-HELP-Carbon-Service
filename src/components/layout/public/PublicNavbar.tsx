@@ -30,10 +30,11 @@ const PublicNavbar = () => {
               </span>
             </Link>
             
-            <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
+            <div className="ml-4 sm:ml-8 sm:flex sm:space-x-4">
               <NavLink to="/" isActive={isActive('/')}>
                 Home
               </NavLink>
+              &nbsp;
               <NavLink to="/blogs" isActive={isActive('/blogs')}>
                 Blogs
               </NavLink>

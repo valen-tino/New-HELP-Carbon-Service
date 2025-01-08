@@ -1,3 +1,4 @@
+// \src\pages\Dashboard.tsx
 import React, { useState, useEffect } from 'react';
 import EmissionSummary from '../components/dashboard/EmissionSummary';
 import ProgressChart from '../components/dashboard/ProgressChart';
@@ -66,9 +67,9 @@ const Dashboard = () => {
         {Object.entries(stats.currentMonth).map(([category, value]) => (
           <EmissionSummary
             key={category}
-            category={category}
+            category={category as 'transportation' | 'energy' | 'diet'}
             currentEmissions={value}
-            previousEmissions={stats.previousMonth[category]}
+            previousEmissions={stats.previousMonth[category as keyof typeof stats.previousMonth]}
           />
         ))}
       </div>
