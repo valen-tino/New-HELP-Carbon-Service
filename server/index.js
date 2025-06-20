@@ -19,6 +19,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Connect to Mongo only once
+let dbPromise;
+async function ensureDatabase() {
+  if (!dbPromise) {
+    dbPromise = connectDB();
+  }
+  await dbPromise;
+}
+
 // Routes - Remove /api prefix from here since we'll handle it in the frontend
 app.use('/auth', authRouter);
 app.use('/activities', activitiesRouter);
@@ -34,18 +43,23 @@ app.get('/', (req, res) => {
   res.json({ message: 'HCS API is running' });
 });
 
-const PORT = process.env.PORT || 5000;
-
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  ensureDatabase()
+    .then(() => {
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+      });
+    })
+    .catch((error) => {
+      console.error('Failed to start server:', error);
+      process.exit(1);
     });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
+} else {
+  // Pre-connect to MongoDB in serverless environment
+  ensureDatabase().catch((err) => {
+    console.error('MongoDB connection error:', err);
+  });
+}
 
-startServer();
+export default app;
