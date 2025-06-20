@@ -4,8 +4,8 @@
   "outputDirectory": "dist",
   "rewrites": [{ "source": "/api/(.*)", "destination": "/api/index.js" }],
   "functions": {
-    "api/**/*.js": {
-      "runtime": "vercel/node@20.0.0"
+    "api/index.js": {
+      "runtime": "@vercel/node@5.3.0"
     }
   }
 }
